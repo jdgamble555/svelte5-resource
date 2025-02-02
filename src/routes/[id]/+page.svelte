@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { resource } from '$lib/resource.svelte';
 
 	type Todo = {
@@ -8,13 +8,11 @@
 		completed: boolean;
 	};
 
-	const id = $derived($page.params.id);
+	const id = $derived(page.params.id);
 
 	const idNumber = $derived(Number(id));
 
-	const todo = resource<Todo>(() =>
-		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`).then((response) => response.json())
-	);
+	const todo = resource<Todo>(() => `https://jsonplaceholder.typicode.com/todos/${id}`);
 
 	const prevId = $derived(Math.max(idNumber - 1, 1));
 	const nextId = $derived(idNumber + 1);

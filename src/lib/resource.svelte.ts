@@ -1,5 +1,5 @@
 export let resource = <T>(
-    fn: () => Promise<T>,
+    getter: () => RequestInfo | URL,
     initialValue?: T
 ) => {
 
@@ -7,10 +7,19 @@ export let resource = <T>(
         value: initialValue
     });
 
+    const controller = new AbortController();
+    const { signal } = controller;
+
     $effect(() => {
-        fn().then((data) => {
-            _rune.value = data;
-        });
+        const url = getter();
+        fetch(url, { signal })
+            .then((response) =>
+                response.json()
+            )
+            .then((data) => {
+                _rune.value = data;
+            });
+        return () => controller.abort();
     });
 
     return _rune;
