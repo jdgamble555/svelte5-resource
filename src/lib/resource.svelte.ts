@@ -24,3 +24,5 @@ export let resource = <T>(
 
     return _rune;
 };
+
+// get other ideas from https://x.com/_georgemoller/status/1884935215778243013
